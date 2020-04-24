@@ -1,0 +1,22 @@
+---
+- hosts: all
+  user: ubuntu
+  become: yes
+  tasks:
+  - apt:
+      update_cache: yes
+      name: "{{ item }}"
+      state: present
+    with_items:
+    - nginx
+    when: ansible_distribution == 'Ubuntu'
+  - apt:
+      upgrade: dist
+  - copy:
+      src: ./manifests/index.html
+      dest: /var/www/html/index.html
+  - service:
+      name: nginx
+      enabled: yes
+      state: started
+      
